@@ -83,6 +83,7 @@ struct Scanner {
     string tag_name;
     while (iswalnum(lexer->lookahead) ||
            lexer->lookahead == '-' ||
+           lexer->lookahead == '@' ||
            lexer->lookahead == ':') {
       tag_name += towupper(lexer->lookahead);
       lexer->advance(lexer, false);
