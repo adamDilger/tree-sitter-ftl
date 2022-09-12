@@ -5,7 +5,7 @@
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 #endif
 
-#define LANGUAGE_VERSION 13
+#define LANGUAGE_VERSION 14
 #define STATE_COUNT 94
 #define LARGE_STATE_COUNT 2
 #define SYMBOL_COUNT 40
@@ -313,6 +313,103 @@ static const TSSymbol ts_alias_sequences[PRODUCTION_ID_COUNT][MAX_ALIAS_SEQUENCE
 
 static const uint16_t ts_non_terminal_alias_map[] = {
   0,
+};
+
+static const TSStateId ts_primary_state_ids[STATE_COUNT] = {
+  [0] = 0,
+  [1] = 1,
+  [2] = 2,
+  [3] = 2,
+  [4] = 4,
+  [5] = 4,
+  [6] = 6,
+  [7] = 6,
+  [8] = 8,
+  [9] = 9,
+  [10] = 10,
+  [11] = 11,
+  [12] = 12,
+  [13] = 13,
+  [14] = 11,
+  [15] = 15,
+  [16] = 16,
+  [17] = 12,
+  [18] = 18,
+  [19] = 19,
+  [20] = 10,
+  [21] = 13,
+  [22] = 22,
+  [23] = 23,
+  [24] = 24,
+  [25] = 25,
+  [26] = 26,
+  [27] = 27,
+  [28] = 28,
+  [29] = 15,
+  [30] = 27,
+  [31] = 16,
+  [32] = 9,
+  [33] = 33,
+  [34] = 25,
+  [35] = 23,
+  [36] = 22,
+  [37] = 24,
+  [38] = 19,
+  [39] = 18,
+  [40] = 40,
+  [41] = 41,
+  [42] = 42,
+  [43] = 43,
+  [44] = 40,
+  [45] = 45,
+  [46] = 46,
+  [47] = 28,
+  [48] = 48,
+  [49] = 43,
+  [50] = 50,
+  [51] = 51,
+  [52] = 51,
+  [53] = 53,
+  [54] = 54,
+  [55] = 55,
+  [56] = 54,
+  [57] = 55,
+  [58] = 53,
+  [59] = 59,
+  [60] = 60,
+  [61] = 61,
+  [62] = 62,
+  [63] = 63,
+  [64] = 64,
+  [65] = 65,
+  [66] = 62,
+  [67] = 67,
+  [68] = 63,
+  [69] = 48,
+  [70] = 50,
+  [71] = 64,
+  [72] = 65,
+  [73] = 73,
+  [74] = 67,
+  [75] = 75,
+  [76] = 76,
+  [77] = 77,
+  [78] = 78,
+  [79] = 79,
+  [80] = 80,
+  [81] = 81,
+  [82] = 82,
+  [83] = 82,
+  [84] = 76,
+  [85] = 85,
+  [86] = 78,
+  [87] = 87,
+  [88] = 87,
+  [89] = 81,
+  [90] = 79,
+  [91] = 80,
+  [92] = 85,
+  [93] = 75,
 };
 
 static bool ts_lex(TSLexer *lexer, TSStateId state) {
@@ -1878,17 +1975,17 @@ static const TSParseActionEntry ts_parse_actions[] = {
 #ifdef __cplusplus
 extern "C" {
 #endif
-void *tree_sitter_html_external_scanner_create(void);
-void tree_sitter_html_external_scanner_destroy(void *);
-bool tree_sitter_html_external_scanner_scan(void *, TSLexer *, const bool *);
-unsigned tree_sitter_html_external_scanner_serialize(void *, char *);
-void tree_sitter_html_external_scanner_deserialize(void *, const char *, unsigned);
+void *tree_sitter_freemarker_external_scanner_create(void);
+void tree_sitter_freemarker_external_scanner_destroy(void *);
+bool tree_sitter_freemarker_external_scanner_scan(void *, TSLexer *, const bool *);
+unsigned tree_sitter_freemarker_external_scanner_serialize(void *, char *);
+void tree_sitter_freemarker_external_scanner_deserialize(void *, const char *, unsigned);
 
 #ifdef _WIN32
 #define extern __declspec(dllexport)
 #endif
 
-extern const TSLanguage *tree_sitter_html(void) {
+extern const TSLanguage *tree_sitter_freemarker(void) {
   static const TSLanguage language = {
     .version = LANGUAGE_VERSION,
     .symbol_count = SYMBOL_COUNT,
@@ -1914,12 +2011,13 @@ extern const TSLanguage *tree_sitter_html(void) {
     .external_scanner = {
       &ts_external_scanner_states[0][0],
       ts_external_scanner_symbol_map,
-      tree_sitter_html_external_scanner_create,
-      tree_sitter_html_external_scanner_destroy,
-      tree_sitter_html_external_scanner_scan,
-      tree_sitter_html_external_scanner_serialize,
-      tree_sitter_html_external_scanner_deserialize,
+      tree_sitter_freemarker_external_scanner_create,
+      tree_sitter_freemarker_external_scanner_destroy,
+      tree_sitter_freemarker_external_scanner_scan,
+      tree_sitter_freemarker_external_scanner_serialize,
+      tree_sitter_freemarker_external_scanner_deserialize,
     },
+    .primary_state_ids = ts_primary_state_ids,
   };
   return &language;
 }

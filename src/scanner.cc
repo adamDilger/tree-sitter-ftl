@@ -168,7 +168,7 @@ struct Scanner {
       if (!tags.empty() && tags.back() == next_tag) return false;
 
       // Otherwise, dig deeper and queue implicit end tags (to be nice in
-      // the case of malformed HTML)
+      // the case of malformed freemarker)
       if (std::find(tags.begin(), tags.end(), next_tag) != tags.end()) {
         tags.pop_back();
         lexer->result_symbol = IMPLICIT_END_TAG;
@@ -282,27 +282,27 @@ struct Scanner {
 
 extern "C" {
 
-void *tree_sitter_html_external_scanner_create() {
+void *tree_sitter_freemarker_external_scanner_create() {
   return new Scanner();
 }
 
-bool tree_sitter_html_external_scanner_scan(void *payload, TSLexer *lexer,
+bool tree_sitter_freemarker_external_scanner_scan(void *payload, TSLexer *lexer,
                                             const bool *valid_symbols) {
   Scanner *scanner = static_cast<Scanner *>(payload);
   return scanner->scan(lexer, valid_symbols);
 }
 
-unsigned tree_sitter_html_external_scanner_serialize(void *payload, char *buffer) {
+unsigned tree_sitter_freemarker_external_scanner_serialize(void *payload, char *buffer) {
   Scanner *scanner = static_cast<Scanner *>(payload);
   return scanner->serialize(buffer);
 }
 
-void tree_sitter_html_external_scanner_deserialize(void *payload, const char *buffer, unsigned length) {
+void tree_sitter_freemarker_external_scanner_deserialize(void *payload, const char *buffer, unsigned length) {
   Scanner *scanner = static_cast<Scanner *>(payload);
   scanner->deserialize(buffer, length);
 }
 
-void tree_sitter_html_external_scanner_destroy(void *payload) {
+void tree_sitter_freemarker_external_scanner_destroy(void *payload) {
   Scanner *scanner = static_cast<Scanner *>(payload);
   delete scanner;
 }

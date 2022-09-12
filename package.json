@@ -1,7 +1,7 @@
 {
-  "name": "tree-sitter-html",
+  "name": "tree-sitter-freemarker",
   "version": "0.19.0",
-  "description": "HTML grammar for tree-sitter",
+  "description": "freemarker grammar for tree-sitter",
   "main": "bindings/node",
   "keywords": [
     "parser",
@@ -9,7 +9,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/tree-sitter/tree-sitter-html.git"
+    "url": "https://github.com/tree-sitter/tree-sitter-freemarker.git"
   },
   "authors": [
     "Max Brunsfeld <maxbrunsfeld@gmail.com>",
@@ -23,16 +23,16 @@
     "tree-sitter-cli": "^0.19.1"
   },
   "scripts": {
-    "test": "tree-sitter test && tree-sitter parse examples/*.html --quiet --time",
+    "test": "tree-sitter test && tree-sitter parse examples/*.ftl --quiet --time",
     "test-windows": "tree-sitter test"
   },
   "tree-sitter": [
     {
-      "scope": "text.html.basic",
+      "scope": "text.freemarker.basic",
       "file-types": [
-        "html"
+        "freemarker"
       ],
-      "injection-regex": "html"
+      "injection-regex": "freemarker"
     }
   ]
 }

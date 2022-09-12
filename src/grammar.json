@@ -1,5 +1,5 @@
 {
-  "name": "html",
+  "name": "freemarker",
   "rules": {
     "fragment": {
       "type": "REPEAT",
