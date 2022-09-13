@@ -34,6 +34,8 @@ module.exports = grammar({
       $.doctype,
       $.text,
       $.element,
+      $.fm_macro,
+			$.fm_directive,
       $.script_element,
       $.style_element,
       $.erroneous_end_tag
@@ -46,6 +48,22 @@ module.exports = grammar({
         choice($.end_tag, $._implicit_end_tag)
       ),
       $.self_closing_tag
+    ),
+
+    fm_macro: $ => choice(
+      seq(
+        $.fm_macro_start_tag,
+        repeat($._node),
+        choice($.fm_macro_end_tag, $._implicit_end_tag)
+      ),
+      $.fm_macro_self_closing_tag
+    ),
+
+		fm_directive: $ => choice(
+      seq(
+        choice($.fm_directive_start_tag, $.fm_if_directive_start_tag),
+        choice($.fm_directive_end_tag, $._implicit_end_tag)
+      ),
     ),
 
     script_element: $ => seq(
@@ -66,6 +84,30 @@ module.exports = grammar({
       repeat($.attribute),
       '>'
     ),
+
+    fm_macro_start_tag: $ => seq(
+      '<@',
+      alias($._start_tag_name, $.tag_name),
+      repeat($.attribute),
+      '>'
+    ),
+
+    fm_directive_start_tag: $ => seq(
+			"<#",
+      choice($.fm_if_directive_start_tag),
+			">"
+    ),
+
+		fm_if_directive_start_tag: $ => seq(
+			"if",
+			$._expression,
+    ),
+
+		_expression: $ => choice(
+			$.identifier,
+		),
+
+		identifier: $ => /[a-zA-Z_]+/,
 
     script_start_tag: $ => seq(
       '<',
@@ -88,9 +130,28 @@ module.exports = grammar({
       '/>'
     ),
 
+    fm_macro_self_closing_tag: $ => seq(
+      '<@',
+      alias($._start_tag_name, $.tag_name),
+      repeat($.attribute),
+      '/>'
+    ),
+
     end_tag: $ => seq(
       '</',
       alias($._end_tag_name, $.tag_name),
+      '>'
+    ),
+
+    fm_macro_end_tag: $ => seq(
+      '</@',
+      alias($._end_tag_name, $.tag_name),
+      '>'
+    ),
+
+    fm_directive_end_tag: $ => seq(
+      '</#',
+      choice("if"),
       '>'
     ),
 

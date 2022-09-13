@@ -318,6 +318,48 @@ freemarker macro tags
 ---
 
 (fragment
-  (element
-    (start_tag (tag_name))
-    (end_tag (tag_name))))
+  (fm_macro
+    (fm_macro_start_tag (tag_name))
+    (fm_macro_end_tag (tag_name))))
+
+=========================================
+freemarker macro self closing tags
+=========================================
+<@helloworld />
+---
+
+(fragment
+  (fm_macro
+    (fm_macro_self_closing_tag
+    (tag_name))))
+
+=========================================
+freemarker macro tags with attributes
+=========================================
+<@helloworld attr="value"></@helloworld>
+---
+
+(fragment
+  (fm_macro
+    (fm_macro_start_tag
+		(tag_name)
+		(attribute
+			(attribute_name)
+			(quoted_attribute_value (attribute_value))))
+	(fm_macro_end_tag
+		(tag_name))))
+
+=========================================
+freemarker if element
+=========================================
+<#if someVariable>
+</#if>
+
+---
+
+(fragment
+  (fm_directive
+    (fm_directive_start_tag
+			(fm_if_directive_start_tag
+				(identifier)))
+		(fm_directive_end_tag)))
