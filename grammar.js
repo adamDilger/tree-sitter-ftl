@@ -34,8 +34,8 @@ module.exports = grammar({
       $.doctype,
       $.text,
       $.element,
-      $.fm_macro,
-			$.fm_directive,
+      $.macro,
+      $.directive,
       $.script_element,
       $.style_element,
       $.erroneous_end_tag
@@ -50,20 +50,17 @@ module.exports = grammar({
       $.self_closing_tag
     ),
 
-    fm_macro: $ => choice(
+    macro: $ => choice(
       seq(
-        $.fm_macro_start_tag,
+        $.macro_start_tag,
         repeat($._node),
-        choice($.fm_macro_end_tag, $._implicit_end_tag)
+        choice($.macro_end_tag, $._implicit_end_tag)
       ),
-      $.fm_macro_self_closing_tag
+      $.macro_self_closing_tag
     ),
 
-		fm_directive: $ => choice(
-      seq(
-        choice($.fm_directive_start_tag, $.fm_if_directive_start_tag),
-        choice($.fm_directive_end_tag, $._implicit_end_tag)
-      ),
+    directive: $ => choice(
+      $.if_statement,
     ),
 
     script_element: $ => seq(
@@ -85,29 +82,53 @@ module.exports = grammar({
       '>'
     ),
 
-    fm_macro_start_tag: $ => seq(
+    macro_start_tag: $ => seq(
       '<@',
       alias($._start_tag_name, $.tag_name),
       repeat($.attribute),
       '>'
     ),
 
-    fm_directive_start_tag: $ => seq(
-			"<#",
-      choice($.fm_if_directive_start_tag),
-			">"
+    if_statement: $ => seq(
+      $.if_tag,
+      repeat($._node),
+      choice($.else_if_statement, $.else_statement, $.if_end_tag)
     ),
 
-		fm_if_directive_start_tag: $ => seq(
-			"if",
-			$._expression,
+    else_if_statement: $ => seq(
+      $.else_if_tag,
+      repeat($._node),
+      choice($.if_end_tag, $.else_statement, $.else_if_statement)
     ),
 
-		_expression: $ => choice(
-			$.identifier,
-		),
+    else_statement: $ => seq(
+      $.else_tag,
+      repeat($._node),
+      $.if_end_tag,
+    ),
 
-		identifier: $ => /[a-zA-Z_]+/,
+    if_tag: $ => seq(
+      "<#",
+      alias("if", $.if_else_tag_name),
+      $._expression,
+      ">",
+    ),
+
+    else_if_tag: $ => seq(
+      "<#",
+      alias("elseif", $.if_else_tag_name),
+      $._expression,
+      ">",
+    ),
+
+    else_tag: ($) => seq("<#", alias("else", $.if_else_tag_name), ">"),
+    if_end_tag: ($) => seq("</#", alias("if", $.if_else_tag_name), ">"),
+
+    _expression: $ => choice(
+      $.identifier,
+    ),
+
+    identifier: $ => /[a-zA-Z_]+/,
 
     script_start_tag: $ => seq(
       '<',
@@ -130,7 +151,7 @@ module.exports = grammar({
       '/>'
     ),
 
-    fm_macro_self_closing_tag: $ => seq(
+    macro_self_closing_tag: $ => seq(
       '<@',
       alias($._start_tag_name, $.tag_name),
       repeat($.attribute),
@@ -143,15 +164,9 @@ module.exports = grammar({
       '>'
     ),
 
-    fm_macro_end_tag: $ => seq(
+    macro_end_tag: $ => seq(
       '</@',
       alias($._end_tag_name, $.tag_name),
-      '>'
-    ),
-
-    fm_directive_end_tag: $ => seq(
-      '</#',
-      choice("if"),
       '>'
     ),
 

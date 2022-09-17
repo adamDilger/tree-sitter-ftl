@@ -55,11 +55,11 @@
         },
         {
           "type": "SYMBOL",
-          "name": "fm_macro"
+          "name": "macro"
         },
         {
           "type": "SYMBOL",
-          "name": "fm_directive"
+          "name": "directive"
         },
         {
           "type": "SYMBOL",
@@ -113,7 +113,7 @@
         }
       ]
     },
-    "fm_macro": {
+    "macro": {
       "type": "CHOICE",
       "members": [
         {
@@ -121,7 +121,7 @@
           "members": [
             {
               "type": "SYMBOL",
-              "name": "fm_macro_start_tag"
+              "name": "macro_start_tag"
             },
             {
               "type": "REPEAT",
@@ -135,7 +135,7 @@
               "members": [
                 {
                   "type": "SYMBOL",
-                  "name": "fm_macro_end_tag"
+                  "name": "macro_end_tag"
                 },
                 {
                   "type": "SYMBOL",
@@ -147,43 +147,16 @@
         },
         {
           "type": "SYMBOL",
-          "name": "fm_macro_self_closing_tag"
+          "name": "macro_self_closing_tag"
         }
       ]
     },
-    "fm_directive": {
+    "directive": {
       "type": "CHOICE",
       "members": [
         {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "fm_directive_start_tag"
-                },
-                {
-                  "type": "SYMBOL",
-                  "name": "fm_if_directive_start_tag"
-                }
-              ]
-            },
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "fm_directive_end_tag"
-                },
-                {
-                  "type": "SYMBOL",
-                  "name": "_implicit_end_tag"
-                }
-              ]
-            }
-          ]
+          "type": "SYMBOL",
+          "name": "if_statement"
         }
       ]
     },
@@ -276,7 +249,7 @@
         }
       ]
     },
-    "fm_macro_start_tag": {
+    "macro_start_tag": {
       "type": "SEQ",
       "members": [
         {
@@ -305,7 +278,93 @@
         }
       ]
     },
-    "fm_directive_start_tag": {
+    "if_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "if_tag"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_node"
+          }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "else_if_statement"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "else_statement"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "if_end_tag"
+            }
+          ]
+        }
+      ]
+    },
+    "else_if_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "else_if_tag"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_node"
+          }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "if_end_tag"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "else_statement"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "else_if_statement"
+            }
+          ]
+        }
+      ]
+    },
+    "else_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "else_tag"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_node"
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "if_end_tag"
+        }
+      ]
+    },
+    "if_tag": {
       "type": "SEQ",
       "members": [
         {
@@ -313,13 +372,17 @@
           "value": "<#"
         },
         {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "fm_if_directive_start_tag"
-            }
-          ]
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "if"
+          },
+          "named": true,
+          "value": "if_else_tag_name"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_expression"
         },
         {
           "type": "STRING",
@@ -327,16 +390,73 @@
         }
       ]
     },
-    "fm_if_directive_start_tag": {
+    "else_if_tag": {
       "type": "SEQ",
       "members": [
         {
           "type": "STRING",
-          "value": "if"
+          "value": "<#"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "elseif"
+          },
+          "named": true,
+          "value": "if_else_tag_name"
         },
         {
           "type": "SYMBOL",
           "name": "_expression"
+        },
+        {
+          "type": "STRING",
+          "value": ">"
+        }
+      ]
+    },
+    "else_tag": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "<#"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "else"
+          },
+          "named": true,
+          "value": "if_else_tag_name"
+        },
+        {
+          "type": "STRING",
+          "value": ">"
+        }
+      ]
+    },
+    "if_end_tag": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "</#"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "if"
+          },
+          "named": true,
+          "value": "if_else_tag_name"
+        },
+        {
+          "type": "STRING",
+          "value": ">"
         }
       ]
     },
@@ -440,7 +560,7 @@
         }
       ]
     },
-    "fm_macro_self_closing_tag": {
+    "macro_self_closing_tag": {
       "type": "SEQ",
       "members": [
         {
@@ -491,7 +611,7 @@
         }
       ]
     },
-    "fm_macro_end_tag": {
+    "macro_end_tag": {
       "type": "SEQ",
       "members": [
         {
@@ -506,28 +626,6 @@
           },
           "named": true,
           "value": "tag_name"
-        },
-        {
-          "type": "STRING",
-          "value": ">"
-        }
-      ]
-    },
-    "fm_directive_end_tag": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "</#"
-        },
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "if"
-            }
-          ]
         },
         {
           "type": "STRING",
