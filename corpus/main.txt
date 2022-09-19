@@ -492,7 +492,7 @@ freemarker macro tags with attributes
 ================================================================================
 freemarker if element
 ================================================================================
-<#if someVariable>
+<#if someVariable gt anotherVariable>
 	<#if another>
 		hello world
 	<#elseif something>
@@ -513,7 +513,9 @@ freemarker if element
     (if_statement
       (if_tag
         (if_else_tag_name)
-        (identifier))
+        (binary_expression
+          (identifier)
+          (identifier)))
       (directive
         (if_statement
           (if_tag
@@ -542,21 +544,3 @@ freemarker if element
         (text)
         (if_end_tag
           (if_else_tag_name))))))
-
-================================================================================
-freemarker expression (todo: need to pref multiplication
-================================================================================
-
-${something}
-${something + 1 * something}
-
---------------------------------------------------------------------------------
-
-(fragment
-	(interpolation
-		(identifier))
-	(interpolation
-		(binary_expression
-			(identifier)
-			(operator)
-			(identifier))))

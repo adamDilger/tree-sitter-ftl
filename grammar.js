@@ -1,3 +1,9 @@
+const 
+  multiplicative_operators = ['*', '/', '%'],
+  additive_operators = ['+', '-'],
+  comparative_operators = ['==', '!=', 'lt', '<=', 'gt', '>='];
+  // assignment_operators = multiplicative_operators.concat(additive_operators).map(operator => operator + '=').concat('=');
+
 module.exports = grammar({
   name: 'freemarker',
 
@@ -127,8 +133,8 @@ module.exports = grammar({
 
     interpolation: $ => seq(
       '${',
-          $._expression,
-          '}'
+      $._expression,
+      '}'
     ),
 
     _expression: $ => choice(
@@ -139,14 +145,21 @@ module.exports = grammar({
     ),
 
 
-    binary_expression: $ => prec.left(
-      1, 
-      seq(
-        field('left', $._expression),
-        $.operator,
-        field('right', $._expression),
-      ),
-    ),
+    binary_expression: $ => {
+      const table = [
+        [3, choice(...multiplicative_operators)],
+        [2, choice(...additive_operators)],
+        [1, choice(...comparative_operators)],
+      ];
+
+      return choice(...table.map(([precedence, operator]) =>
+        prec.left(precedence, seq(
+          field('left', $._expression),
+          field('operator', operator),
+          field('right', $._expression)
+        ))
+      ));
+    },
 
     parenthesized_expression: $ => seq(
       '(',
@@ -156,22 +169,6 @@ module.exports = grammar({
 
     number: () => /[0-9]+/,
     identifier: () => /[a-zA-Z_]+/,
-
-    operator: () => choice(
-      '+',
-      '-',
-      '*',
-      '/',
-      '%',
-      '==',
-      '!=',
-      'gt',
-      '>=',
-      'lt',
-      '<=',
-      '&&',
-    ),
-
 
     script_start_tag: $ => seq(
       '<',
