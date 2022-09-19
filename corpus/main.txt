@@ -542,3 +542,21 @@ freemarker if element
         (text)
         (if_end_tag
           (if_else_tag_name))))))
+
+================================================================================
+freemarker expression (todo: need to pref multiplication
+================================================================================
+
+${something}
+${something + 1 * something}
+
+--------------------------------------------------------------------------------
+
+(fragment
+	(interpolation
+		(identifier))
+	(interpolation
+		(binary_expression
+			(identifier)
+			(operator)
+			(identifier))))

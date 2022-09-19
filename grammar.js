@@ -36,6 +36,7 @@ module.exports = grammar({
       $.element,
       $.macro,
       $.directive,
+      $.interpolation,
       $.script_element,
       $.style_element,
       $.erroneous_end_tag
@@ -124,11 +125,53 @@ module.exports = grammar({
     else_tag: ($) => seq("<#", alias("else", $.if_else_tag_name), ">"),
     if_end_tag: ($) => seq("</#", alias("if", $.if_else_tag_name), ">"),
 
-    _expression: $ => choice(
-      $.identifier,
+    interpolation: $ => seq(
+      '${',
+          $._expression,
+          '}'
     ),
 
-    identifier: $ => /[a-zA-Z_]+/,
+    _expression: $ => choice(
+      $.number,
+      $.identifier,
+      $.binary_expression,
+      $.parenthesized_expression,
+    ),
+
+
+    binary_expression: $ => prec.left(
+      1, 
+      seq(
+        field('left', $._expression),
+        $.operator,
+        field('right', $._expression),
+      ),
+    ),
+
+    parenthesized_expression: $ => seq(
+      '(',
+      $._expression,
+      ')'
+    ),
+
+    number: () => /[0-9]+/,
+    identifier: () => /[a-zA-Z_]+/,
+
+    operator: () => choice(
+      '+',
+      '-',
+      '*',
+      '/',
+      '%',
+      '==',
+      '!=',
+      'gt',
+      '>=',
+      'lt',
+      '<=',
+      '&&',
+    ),
+
 
     script_start_tag: $ => seq(
       '<',
@@ -196,6 +239,7 @@ module.exports = grammar({
       seq('"', optional(alias(/[^"]+/, $.attribute_value)), '"')
     ),
 
-    text: $ => /[^<>\s]([^<>]*[^<>\s])?/
+    // text: $ => /[^<>\s]([^<>]*[^<>\s])?/
+    text: $ => /[^<>${}\s]([^<>]*[^<>${}\s])?/ // TODO: probably wrong,
   }
 });
