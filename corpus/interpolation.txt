@@ -15,10 +15,10 @@ ${something + 1 * something}
         (identifier)))))
 
 ================================================================================
-interolation expression in attribute
+interolation expression in quoted attribute value
 ================================================================================
 
-<div class="${something}"></div>
+<div class="something-${something}-another"></div>
 
 --------------------------------------------------------------------------------
 
@@ -29,7 +29,50 @@ interolation expression in attribute
       (attribute
         (attribute_name)
         (quoted_attribute_value
+          (attribute_value)
+          (interpolation
+            (identifier))
+          (attribute_value))))
+    (end_tag
+      (tag_name))))
+
+================================================================================
+interolation expression in attribute value
+================================================================================
+
+<div hello=${world}></div>
+
+--------------------------------------------------------------------------------
+
+(fragment
+  (element
+    (start_tag
+      (tag_name)
+      (attribute
+        (attribute_name)
+        (attribute_value
           (interpolation
             (identifier)))))
+    (end_tag
+      (tag_name))))
+
+================================================================================
+interolation expression in attribute name
+================================================================================
+
+<div ${attribute}="a_value"></div>
+
+--------------------------------------------------------------------------------
+
+(fragment
+  (element
+    (start_tag
+      (tag_name)
+      (attribute
+        (attribute_name
+          (interpolation
+            (identifier)))
+        (quoted_attribute_value
+          (attribute_value))))
     (end_tag
       (tag_name))))

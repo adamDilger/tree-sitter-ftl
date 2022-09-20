@@ -132,18 +132,21 @@ module.exports = grammar({
     if_end_tag: ($) => seq("</#", alias("if", $.if_else_tag_name), ">"),
 
     interpolation: $ => seq(
-      '${',
-      $._expression,
-      '}'
+      '${', $._expression, '}'
     ),
 
     _expression: $ => choice(
       $.number,
       $.identifier,
+      $.unary_expression,
       $.binary_expression,
       $.parenthesized_expression,
     ),
 
+    unary_expression: $ => seq(
+      field('operator', choice('+', '-', '!')),
+      field('operand', $._expression),
+    ),
 
     binary_expression: $ => {
       const table = [
@@ -168,7 +171,12 @@ module.exports = grammar({
     ),
 
     number: () => /[0-9]+/,
-    identifier: () => /[a-zA-Z_]+/,
+
+    identifier: ($) => prec.left(1, seq(
+      /[a-zA-Z_]+/,
+      repeat(seq('.', $.identifier)),
+      alias(repeat(seq('?', /[a-zA-Z_]+/)), $.modifier),
+    )),
 
     script_start_tag: $ => seq(
       '<',
@@ -227,16 +235,40 @@ module.exports = grammar({
       ))
     ),
 
-    attribute_name: $ => /[^<>"'/=\s]+/,
+    attribute_name: $ => choice(
+      $.interpolation,
+      /[^$<>"'/=\s]+/,
+    ),
 
-    attribute_value: $ => /[^<>"'=\s]+/,
+    attribute_value: $ => choice(
+      $.interpolation,
+      /[^$<>"'=\s]+/
+    ),
 
     quoted_attribute_value: $ => choice(
-      seq("'", optional(alias(/[^']+/, $.attribute_value)), "'"),
-      seq('"', optional(alias(/[^"]+/, $.attribute_value)), '"')
+      seq(
+        "'",
+        repeat(
+          choice(
+            alias(/[^'$]+/, $.attribute_value),
+            $.interpolation,
+          ),
+        ),
+        "'"
+      ),
+      seq(
+        '"',
+        repeat(
+          choice(
+            alias(/[^"$]+/, $.attribute_value),
+            $.interpolation,
+          ),
+        ),
+        '"'
+      ),
     ),
 
     // text: $ => /[^<>\s]([^<>]*[^<>\s])?/
-    text: $ => /[^<>${}\s]([^<>]*[^<>${}\s])?/ // TODO: probably wrong,
+    text: $ => /[^<>$\s]([^<>]*[^<>\s])?/ // TODO: probably wrong,
   }
 });

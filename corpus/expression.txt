@@ -1,0 +1,49 @@
+================================================================================
+expression with identifier
+================================================================================
+${someVariable}
+--------------------------------------------------------------------------------
+
+(fragment
+  (interpolation
+    (identifier)))
+
+================================================================================
+unary expressions
+================================================================================
+${!someVariable}
+${+(1 + someVariable)}
+${-someVariable}
+--------------------------------------------------------------------------------
+
+(fragment
+  (interpolation
+    (unary_expression
+      (identifier)))
+  (interpolation
+    (unary_expression
+      (parenthesized_expression
+        (binary_expression
+          (number)
+          (identifier)))))
+  (interpolation
+    (unary_expression
+      (identifier))))
+
+================================================================================
+binary expressions
+================================================================================
+${1 + 2 * someVariable - 4 / 5}
+--------------------------------------------------------------------------------
+
+(fragment
+  (interpolation
+    (binary_expression
+      (binary_expression
+        (number)
+        (binary_expression
+          (number)
+          (identifier)))
+      (binary_expression
+        (number)
+        (number)))))

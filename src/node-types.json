@@ -23,6 +23,36 @@
     }
   },
   {
+    "type": "attribute_name",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "interpolation",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "attribute_value",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "interpolation",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "binary_expression",
     "named": true,
     "fields": {
@@ -44,6 +74,10 @@
           },
           {
             "type": "parenthesized_expression",
+            "named": true
+          },
+          {
+            "type": "unary_expression",
             "named": true
           }
         ]
@@ -116,6 +150,10 @@
           },
           {
             "type": "parenthesized_expression",
+            "named": true
+          },
+          {
+            "type": "unary_expression",
             "named": true
           }
         ]
@@ -291,6 +329,10 @@
         {
           "type": "parenthesized_expression",
           "named": true
+        },
+        {
+          "type": "unary_expression",
+          "named": true
         }
       ]
     }
@@ -443,6 +485,25 @@
     }
   },
   {
+    "type": "identifier",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "modifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "if_end_tag",
     "named": true,
     "fields": {},
@@ -547,6 +608,10 @@
         {
           "type": "parenthesized_expression",
           "named": true
+        },
+        {
+          "type": "unary_expression",
+          "named": true
         }
       ]
     }
@@ -573,6 +638,10 @@
         },
         {
           "type": "parenthesized_expression",
+          "named": true
+        },
+        {
+          "type": "unary_expression",
           "named": true
         }
       ]
@@ -691,6 +760,11 @@
     }
   },
   {
+    "type": "modifier",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "parenthesized_expression",
     "named": true,
     "fields": {},
@@ -713,6 +787,10 @@
         {
           "type": "parenthesized_expression",
           "named": true
+        },
+        {
+          "type": "unary_expression",
+          "named": true
         }
       ]
     }
@@ -722,11 +800,15 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": false,
       "types": [
         {
           "type": "attribute_value",
+          "named": true
+        },
+        {
+          "type": "interpolation",
           "named": true
         }
       ]
@@ -817,6 +899,60 @@
     }
   },
   {
+    "type": "unary_expression",
+    "named": true,
+    "fields": {
+      "operand": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "binary_expression",
+            "named": true
+          },
+          {
+            "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
+            "type": "parenthesized_expression",
+            "named": true
+          },
+          {
+            "type": "unary_expression",
+            "named": true
+          }
+        ]
+      },
+      "operator": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "!",
+            "named": false
+          },
+          {
+            "type": "+",
+            "named": false
+          },
+          {
+            "type": "-",
+            "named": false
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "!",
+    "named": false
+  },
+  {
     "type": "!=",
     "named": false
   },
@@ -854,6 +990,10 @@
   },
   {
     "type": "-",
+    "named": false
+  },
+  {
+    "type": ".",
     "named": false
   },
   {
@@ -913,12 +1053,8 @@
     "named": false
   },
   {
-    "type": "attribute_name",
-    "named": true
-  },
-  {
-    "type": "attribute_value",
-    "named": true
+    "type": "?",
+    "named": false
   },
   {
     "type": "comment",
@@ -935,10 +1071,6 @@
   {
     "type": "gt",
     "named": false
-  },
-  {
-    "type": "identifier",
-    "named": true
   },
   {
     "type": "if_else_tag_name",
